@@ -4,7 +4,7 @@ import { BadRequest, Forbidden } from "../utils/Errors.js"
 class BugsService {
 
   async getBugById(bugId, userId) {
-    const bug = await (await dbContext.Bugs.findById(bugId)).populate('creator')
+    const bug = await dbContext.Bugs.findById(bugId).populate('creator')
 
     if (bug == null) {
       throw new BadRequest(`${bugId} not found in the database`)
@@ -37,6 +37,14 @@ class BugsService {
     await bugToUpdate.save()
 
     return bugToUpdate
+  }
+
+  async deleteBug(bugId, userId) {
+    const bugToDelete = await this.getBugById(bugId, userId)
+
+    await bugToDelete.deleteOne()
+
+    return `${bugToDelete.title} has been deleted!`
   }
 }
 

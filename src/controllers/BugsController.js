@@ -11,6 +11,7 @@ export class BugsController extends BaseController {
       .get('', this.getAllBugs)
       .get('/:bugId', this.getBugById)
       .put('/:bugId', this.updateBug)
+      .delete('/:bugId', this.deleteBug)
   }
 
   async getBugById(request, response, next) {
@@ -52,6 +53,17 @@ export class BugsController extends BaseController {
       const bugData = request.body
       const updateBug = await bugService.updateBug(bugId, userInfo.id, bugData)
       response.send(updateBug)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async deleteBug(request, response, next) {
+    try {
+      const bugId = request.params.bugId
+      const userInfo = request.userInfo
+      const deletedBug = await bugService.deleteBug(bugId, userInfo.id)
+      response.send(deletedBug)
     } catch (error) {
       next(error)
     }
