@@ -3,14 +3,14 @@ import { BadRequest, Forbidden } from "../utils/Errors.js"
 
 class BugsService {
 
-  async getBugById(bugId, userInfo) {
+  async getBugById(bugId, userId) {
     const bug = await (await dbContext.Bugs.findById(bugId)).populate('creator')
 
     if (bug == null) {
       throw new BadRequest(`${bugId} not found in the database`)
     }
 
-    if (bug.creatorId != userInfo) {
+    if (bug.creatorId != userId) {
       throw new Forbidden(`You are not authorized for access to ${bugId}`)
     }
 
@@ -25,6 +25,18 @@ class BugsService {
   async createBug(bugData) {
     const bug = (await dbContext.Bugs.create(bugData)).populate('creator')
     return bug
+  }
+
+  async updateBug(bugId, userId, bugData) {
+    const bugToUpdate = await this.getBugById(bugId, userId)
+
+    bugToUpdate.closed = bugData.closed ?? bugToUpdate.closed
+    bugToUpdate.description = bugData.description ?? bugToUpdate.description
+    bugToUpdate.title = bugData.title ?? bugToUpdate.title
+
+    await bugToUpdate.save()
+
+    return bugToUpdate
   }
 }
 
