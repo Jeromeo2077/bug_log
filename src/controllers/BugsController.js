@@ -9,14 +9,14 @@ export class BugsController extends BaseController {
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createBug)
       .get('', this.getAllBugs)
-      .get('', this.getBugById)
+      .get('/:bugId', this.getBugById)
   }
 
   async getBugById(request, response, next) {
     try {
       const bugId = request.params.bugId
       const userInfo = request.userInfo
-      const bug = await bugService.getBugById(bugId, userInfo)
+      const bug = await bugService.getBugById(bugId, userInfo.id)
       response.send(bug)
     } catch (error) {
       next(error)

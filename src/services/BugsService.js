@@ -4,7 +4,7 @@ import { BadRequest, Forbidden } from "../utils/Errors.js"
 class BugsService {
 
   async getBugById(bugId, userInfo) {
-    const bug = await dbContext.Bugs.findById(bugId)
+    const bug = await (await dbContext.Bugs.findById(bugId)).populate('creator')
 
     if (bug == null) {
       throw new BadRequest(`${bugId} not found in the database`)
