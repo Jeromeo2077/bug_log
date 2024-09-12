@@ -10,6 +10,7 @@ export class BugsController extends BaseController {
       .post('', this.createBug)
       .get('', this.getAllBugs)
   }
+
   async getAllBugs(request, response, next) {
     try {
       const bugs = await bugService.getAllBugs()
@@ -26,7 +27,6 @@ export class BugsController extends BaseController {
       bugData.creatorId = user.id
       const bug = await bugService.createBug(bugData)
       response.send(bug)
-
     } catch (error) {
       next(error)
     }

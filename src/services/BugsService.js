@@ -11,7 +11,6 @@ class BugsService {
     const bug = (await dbContext.Bugs.create(bugData)).populate('creator')
     return bug
   }
-
 }
 
 export const bugService = new BugsService
